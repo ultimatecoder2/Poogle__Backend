@@ -22,3 +22,5 @@ router.get("/msgs", async (req, res) => {
 		.skip(start);
 	res.status(200).send(chat);
 });
+
+module.exports = router;
