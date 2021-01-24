@@ -8,7 +8,11 @@ const answerReactionSchema = new mongoose.Schema({
 	answer: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Answer",
-	},
+    },
+    category: {
+		type: String,
+		required: true
+	}
 });
 
 const AnswerReactions = mongoose.model("AnswerReaction", answerReactionSchema);
