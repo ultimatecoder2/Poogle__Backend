@@ -7,8 +7,8 @@ router;
 
 // receiving msgs
 router.get("/msgs", async (req, res) => {
-	const me = req.me;
-	const other = req.other;
+	const me = req.body.me;
+	const other = req.body.other;
 	const start = req.query.start;
 	const limit = req.query.limit;
 	const chat = await Chat.find({
