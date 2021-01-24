@@ -1,7 +1,11 @@
-const mongoose= require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/poogle-api',{
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify:false
-});
+const mongoose = require("mongoose");
+
+mongoose.connect(
+	`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.csecw.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
+	{
+		useNewUrlParser: true,
+		useCreateIndex: true,
+		useUnifiedTopology: true,
+		useFindAndModify: false,
+	}
+);
