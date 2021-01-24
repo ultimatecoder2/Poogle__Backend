@@ -9,6 +9,10 @@ const blogReactionSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Blog",
 	},
+	category: {
+		type: String,
+		required: true
+	}
 });
 
 const BlogReactions = mongoose.model("BlogReaction", blogReactionSchema);

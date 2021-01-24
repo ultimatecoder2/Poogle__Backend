@@ -9,6 +9,10 @@ const questionReactionSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Question",
 	},
+	category: {
+		type: String,
+		required: true
+	}
 });
 
 const QuestionReactions = mongoose.model(
