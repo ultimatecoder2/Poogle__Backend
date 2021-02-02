@@ -4,9 +4,7 @@ const router = new express.Router();
 const auth = require('../middleware/auth');
 //Signup
 router.post("/users", async (req, res) => {
-	console.log(req);
 	const user = new User(req.body);
-
 	try {
 		await user.save();
 		//adding authentication left
