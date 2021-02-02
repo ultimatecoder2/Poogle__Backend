@@ -1,41 +1,21 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const Questions = require('../models/questions');
+const Answers = require('../models/answers');
 const auth = require('../middleware/auth');
-const multer = require("multer");
 
-// STORAGE MULTER CONFIG
-let storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "uploads/questions");
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}_${file.originalname}`);
-    },
-    fileFilter: (req, file, cb) => {
-        const ext = path.extname(file.originalname)
-        if (ext !== '.jpg' && ext !== '.png' && ext !== '.mp4') {
-            return cb(res.status(400).end('only jpg, png, mp4 is allowed'), false);
-        }
-        cb(null, true)
-    }
-});
+const answerRouter = express.Router();
 
-const upload = multer({ storage: storage }).single("file");
+answerRouter.use(bodyParser.json());
 
-const questionRouter = express.Router();
-
-questionRouter.use(bodyParser.json());
-
-questionRouter.route('/questions')
+answerRouter.route('/answers')
 .get( (req, res, next) => {
 
-    Questions.find({})
+    Answers.find({})
     //.populate('author')
-    .then((question) => {
+    .then((answers) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(question);
+        res.json(answers);
     }, (err) => next(err))
     .catch((err) => next(err));
 })
@@ -43,20 +23,20 @@ questionRouter.route('/questions')
     
     if (req.body != null) {
         //req.body.author = req.user._id;
-        Questions.create(req.body)
-        .then((question) => {
-            Questions.findById(question._id)
+        Answers.create(req.body)
+        .then((answer) => {
+            Answers.findById(answer._id)
             //.populate('author')
-            .then((question) => {
+            .then((answer) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(question);
+                res.json(answer);
             })
         }, (err) => next(err))
         .catch((err) => next(err));
     }
     else {
-        err = new Error('Question not found in request body');
+        err = new Error('Answer not found in request body');
         err.status = 404;
         return next(err);
     }
@@ -65,30 +45,30 @@ questionRouter.route('/questions')
 .put(auth, (req,res,next) => {
     
     res.statusCode = 403;
-    res.end('PUT operation not supported on /questions');
+    res.end('PUT operation not supported on /answers');
 })
 .delete(auth, (req,res,next) => {
     
     res.statusCode = 403;
-    res.end('DELETE operation not supported on /questions');
+    res.end('DELETE operation not supported on /answers');
 });
 
-questionRouter.route('/questions/:quesId')
+answerRouter.route('/answers/:ansId')
 .get( (req,res,next) => {
-    Questions.findById(req.params.quesId)
+    Answers.findById(req.params.ansId)
     //.populate('author')
-    .then((question) => {
+    .then((answer) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(question);
+        res.json(answer);
     }, (err) => next(err))
     .catch((err) => next(err));
 })
 .put( (req, res, next) => {
-    Questions.findById(req.params.quesId)
-    .then((question) => {
-        if (question != null) {
-            if (!question.author.equals(req.user._id)) {
+    Answers.findById(req.params.ansId)
+    .then((answer) => {
+        if (answer != null) {
+            if (!answer.author.equals(req.user._id)) {
                 var err = new Error('You are not authorized to update this question!');
                 err.status = 403;
                 return next(err);
@@ -125,7 +105,7 @@ questionRouter.route('/questions/:quesId')
                 err.status = 403;
                 return next(err);
             }
-            Questions.findByIdAndRemove(req.params.quesId)
+            Questions.findByIdAndRemove(req.params.ansId)
             .then((resp) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -134,7 +114,7 @@ questionRouter.route('/questions/:quesId')
             .catch((err) => next(err));
         }
         else {
-            err = new Error('Question with id ' + req.params.quesId + ' not found');
+            err = new Error('Question with id ' + req.params.ansId + ' not found');
             err.status = 404;
             return next(err);            
         }
@@ -142,4 +122,4 @@ questionRouter.route('/questions/:quesId')
     .catch((err) => next(err));
 });
 
-module.exports = questionRouter;
+module.exports = answerRouter;

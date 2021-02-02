@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const logger = require('morgan');
+var path = require('path');
 
 require("dotenv").config();
 require("./db/mongoose");
@@ -12,6 +13,8 @@ const questionRouter = require('./routers/question');
 const questionCommentRouter = require('./routers/questionComments');
 const blogRouter = require('./routers/blogs');
 const blogCommentRouter = require('./routers/blogComments');
+const answerRouter = require('./routers/answer');
+const uploadRouter = require('./routers/upload');
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -20,6 +23,9 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+//app.use(express.static(path.join(__dirname, '../public')));
+app.use('/uploads', express.static('uploads'));
+
 app.use(cors());
 app.use(userRouter);
 app.use(spaceRouter);
@@ -27,6 +33,8 @@ app.use(questionRouter);
 app.use(questionCommentRouter);
 app.use(blogRouter);
 app.use(blogCommentRouter);
+app.use(answerRouter);
+app.use(uploadRouter);
 app.use(chatRouter);
 
 
@@ -43,7 +51,8 @@ app.use(function(req, res, next) {
 
 	// render the error page
 	res.status(err.status || 500);
-	res.render('error');
+	//res.render('error');
+	res.json({ error: err })
 	});
 
 

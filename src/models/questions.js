@@ -14,22 +14,24 @@ const questionSchema = new mongoose.Schema(
 			type: [String],
 			required: true,
 		},
-		author: {
+		/*author: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "User",
-		},
+		},*/
 		dateNum: {
 			type: Number,
 			required: true,
 		},
 		tagIds: [
 			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: "Space",
+				// type: mongoose.Schema.Types.ObjectId,
+				// ref: "Space",
+				type: [String],
+				required: true,
 			},
 		],
-		links: [String],
-		imageUrls: [String],
+		//links: [String],
+		//imageUrls: [String],
 	},
 	{ timestamps: true }
 );

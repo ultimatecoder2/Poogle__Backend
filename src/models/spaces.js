@@ -6,6 +6,11 @@ const spaceSchema = new mongoose.Schema({
 		required: true,
 		unique: true,
 	},
+	stringId: {
+		type: String,
+		required: true,
+		unique: true
+	},
 	image: {
 		type: String,
 		required: true,

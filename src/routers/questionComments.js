@@ -9,9 +9,9 @@ const questionCommentRouter = express.Router();
 questionCommentRouter.use(bodyParser.json());
 
 questionCommentRouter.route('/questionComments')
-.get(auth, (req,res,next) => {
-    QuestionComments.find(req.query)
-    .populate('author')
+.get( (req,res,next) => {
+    QuestionComments.find()
+    //.populate('author')
     .then((questionComments) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -19,13 +19,13 @@ questionCommentRouter.route('/questionComments')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth, (req, res, next) => {
+.post( (req, res, next) => {
     if (req.body != null) {
         req.body.author = req.user._id;
         QuestionComments.create(req.body)
         .then((comment) => {
             QuestionComments.findById(comment._id)
-            .populate('author')
+            //.populate('author')
             .then((comment) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -43,9 +43,9 @@ questionCommentRouter.route('/questionComments')
 })
 
 questionCommentRouter.route('/questionComments/:commentId')
-.get(auth, (req,res,next) => {
+.get( (req,res,next) => {
     QuestionComments.findById(req.params.commentId)
-    .populate('author')
+    //.populate('author')
     .then((comment) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -57,7 +57,7 @@ questionCommentRouter.route('/questionComments/:commentId')
     res.statusCode = 403;
     res.end('POST operation not supported on /questionComments/'+ req.params.commentId);
 })
-.put(auth, (req, res, next) => {
+.put( (req, res, next) => {
     QuestionComments.findById(req.params.commentId)
     .then((comment) => {
         if (comment != null) {
@@ -72,7 +72,7 @@ questionCommentRouter.route('/questionComments/:commentId')
             }, { new: true })
             .then((comment) => {
                 QuestionComments.findById(comment._id)
-                .populate('author')
+                //.populate('author')
                 .then((comment) => {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');
@@ -88,7 +88,7 @@ questionCommentRouter.route('/questionComments/:commentId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete(auth, (req, res, next) => {
+.delete( (req, res, next) => {
     QuestionComments.findById(req.params.commentId)
     .then((comment) => {
         if (comment != null) {

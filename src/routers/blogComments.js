@@ -9,9 +9,9 @@ const blogCommentRouter = express.Router();
 blogCommentRouter.use(bodyParser.json());
 
 blogCommentRouter.route('/blogComments')
-.get(auth, (req,res,next) => {
-    BlogComments.find(req.query)
-    .populate('author')
+.get( (req,res,next) => {
+    BlogComments.find()
+    //.populate('author')
     .then((blogComments) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -19,13 +19,13 @@ blogCommentRouter.route('/blogComments')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth, (req, res, next) => {
+.post( (req, res, next) => {
     if (req.body != null) {
         req.body.author = req.user._id;
         BlogComments.create(req.body)
         .then((comment) => {
             BlogComments.findById(comment._id)
-            .populate('author')
+            //.populate('author')
             .then((comment) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -43,9 +43,9 @@ blogCommentRouter.route('/blogComments')
 })
 
 blogCommentRouter.route('/blogComments/:commentId')
-.get(auth, (req,res,next) => {
+.get( (req,res,next) => {
     BlogComments.findById(req.params.commentId)
-    .populate('author')
+    //.populate('author')
     .then((comment) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -53,11 +53,11 @@ blogCommentRouter.route('/blogComments/:commentId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth, (req, res, next) => {
+.post( (req, res, next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /blogComments/'+ req.params.commentId);
 })
-.put(auth, (req, res, next) => {
+.put( (req, res, next) => {
     BlogComments.findById(req.params.commentId)
     .then((comment) => {
         if (comment != null) {
@@ -72,7 +72,7 @@ blogCommentRouter.route('/blogComments/:commentId')
             }, { new: true })
             .then((comment) => {
                 BlogComments.findById(comment._id)
-                .populate('author')
+                //.populate('author')
                 .then((comment) => {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');
@@ -88,7 +88,7 @@ blogCommentRouter.route('/blogComments/:commentId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete(auth, (req, res, next) => {
+.delete( (req, res, next) => {
     BlogComments.findById(req.params.commentId)
     .then((comment) => {
         if (comment != null) {
