@@ -44,16 +44,12 @@ const userSchema = new mongoose.Schema(
 			graduation_year: {
 				type: String, // as we don't need to perform any kind of arithmetic
 				trim: true,
-			},
-			fun_fact: {
-				type: String,
-				trim: true,
-			},
+			}
 		},
 		interests: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: "Spaces",
+				ref: "Spaces"
 			},
 		],
 		tokens: [
