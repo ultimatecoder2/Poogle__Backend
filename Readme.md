@@ -38,3 +38,18 @@ Now run following commands:
 show dbs
 
 this will show u a db as poogle-api this will be database for our project ..
+
+# To Create Spaces
+postman URL: http://localhost:3001/spaces/me/image
+Under body-> select form-data
+There you will be asked to fill key value pairs:
+Key                        Value
+-> image                      Attach image file by selecting the file type option
+
+->name                       {Space Name}
+->stringId                    {stringId}
+
+# To get Images of Spaces
+location = http://localhost:3001/spaces/{spaceId}/image
+now use
+`<img src={location} />`
