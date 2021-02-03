@@ -28,7 +28,7 @@ const questionRouter = express.Router();
 questionRouter.use(bodyParser.json());
 
 questionRouter.route('/questions')
-.get( (req, res, next) => {
+.get((req, res, next) => {
 
     Questions.find({})
     .populate('author')
@@ -74,7 +74,7 @@ questionRouter.route('/questions')
 });
 
 questionRouter.route('/questions/:quesId')
-.get( (req,res,next) => {
+.get((req,res,next) => {
     Questions.findById(req.params.quesId)
     .populate('author')
     .then((question) => {

@@ -37,7 +37,7 @@ blogRouter.use(bodyParser.json());
 // });
 
 blogRouter.route('/blogs')
-.get( (req, res, next) => {
+.get((req, res, next) => {
 
     Blogs.find()
     //.populate('author')
@@ -83,7 +83,7 @@ blogRouter.route('/blogs')
 });
 
 blogRouter.route('/blogs/:blogId')
-.get( (req,res,next) => {
+.get((req,res,next) => {
     Blogs.findById(req.params.blogId)
     //.populate('author')
     .then((blog) => {

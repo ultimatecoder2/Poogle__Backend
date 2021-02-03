@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const logger = require('morgan');
 var path = require('path');
+const multer = require('multer');
 
 require("dotenv").config();
 require("./db/mongoose");
@@ -18,6 +19,10 @@ const uploadRouter = require('./routers/upload');
 
 const app = express();
 const port = process.env.PORT || 3001;
+const upload = multer({
+	dest:'images'
+})
+
 
 // app.use(logger('dev'));
 app.use(express.json());
