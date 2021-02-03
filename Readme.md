@@ -66,4 +66,4 @@ Key   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Value
 location = http://localhost:3001/spaces/{spaceId}/image
 <br/>
 now use
-`<img src={location} />`
+<code><img src={location} /></code>
