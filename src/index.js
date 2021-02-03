@@ -37,7 +37,7 @@ app.use(answerRouter);
 app.use(uploadRouter);
 app.use(chatRouter);
 
-/*
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
 	next(createError(404));
@@ -56,7 +56,7 @@ app.use(function(req, res, next) {
 	res.json({error:'error'});
 	});
 
-*/
+
 app.listen(port, () => {
 	console.log("Server is up on port", port);
 });

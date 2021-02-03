@@ -5,7 +5,7 @@ const auth = require('../middleware/auth');
 const multer = require("multer");
 
 // STORAGE MULTER CONFIG
-let storage = multer.diskStorage({
+/*let storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "uploads/questions");
     },
@@ -21,7 +21,7 @@ let storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage }).single("file");
+const upload = multer({ storage: storage }).single("file");*/
 
 const questionRouter = express.Router();
 
@@ -31,7 +31,7 @@ questionRouter.route('/questions')
 .get( (req, res, next) => {
 
     Questions.find({})
-    //.populate('author')
+    .populate('author')
     .then((question) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -46,7 +46,7 @@ questionRouter.route('/questions')
         Questions.create(req.body)
         .then((question) => {
             Questions.findById(question._id)
-            //.populate('author')
+            .populate('author')
             .then((question) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -76,7 +76,7 @@ questionRouter.route('/questions')
 questionRouter.route('/questions/:quesId')
 .get( (req,res,next) => {
     Questions.findById(req.params.quesId)
-    //.populate('author')
+    .populate('author')
     .then((question) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -99,7 +99,7 @@ questionRouter.route('/questions/:quesId')
             }, { new: true })
             .then((question) => {
                 Questions.findById(question._id)
-                //.populate('author')
+                .populate('author')
                 .then((question) => {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');
@@ -115,7 +115,7 @@ questionRouter.route('/questions/:quesId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete( (req, res, next) => {
+.delete(auth, (req, res, next) => {
 
     Questions.findById(req.params.quesId)
     .then((question) => {
