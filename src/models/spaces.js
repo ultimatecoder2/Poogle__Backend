@@ -4,16 +4,17 @@ const spaceSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: true,
-		unique: true,
+		unique:true, 
+		trim:true
 	},
-	stringId: {
-		type: String,
-		required: true,
-		unique: true
+	stringId:{
+		type:String, 
+		required:true,
+		unique:true,
+		trim:true
 	},
-	image: {
-		type: String,
-		required: true,
+	image:{
+		type:Buffer
 	},
 	followers: [
 		{
