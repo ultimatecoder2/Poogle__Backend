@@ -56,7 +56,7 @@ app.use(function (err, req, res, next) {
 	res.status(err.status || 500);
 	//res.render('error');
 	res.json({ error: err });
-	res.json({ error: "error" });
+	//res.json({ error: "error" });
 });
 
 app.listen(port, () => {

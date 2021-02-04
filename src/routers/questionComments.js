@@ -11,7 +11,7 @@ questionCommentRouter.use(bodyParser.json());
 questionCommentRouter.route('/questionComments')
 .get( (req,res,next) => {
     QuestionComments.find()
-    //.populate('author')
+    .populate('author')
     .then((questionComments) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -25,7 +25,7 @@ questionCommentRouter.route('/questionComments')
         QuestionComments.create(req.body)
         .then((comment) => {
             QuestionComments.findById(comment._id)
-            //.populate('author')
+            .populate('author')
             .then((comment) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -45,7 +45,7 @@ questionCommentRouter.route('/questionComments')
 questionCommentRouter.route('/questionComments/:commentId')
 .get( (req,res,next) => {
     QuestionComments.findById(req.params.commentId)
-    //.populate('author')
+    .populate('author')
     .then((comment) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -72,7 +72,7 @@ questionCommentRouter.route('/questionComments/:commentId')
             }, { new: true })
             .then((comment) => {
                 QuestionComments.findById(comment._id)
-                //.populate('author')
+                .populate('author')
                 .then((comment) => {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');
