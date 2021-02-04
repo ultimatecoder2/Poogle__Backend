@@ -66,18 +66,13 @@ router.get('/users/me', auth, async(req,res)=>{
 
 const upload = multer({
     limits:{
-        fileSize:1000000
+        fileSize:1000000 //1mb pic size
     },
     fileFilter(req, file, cb){
         if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
             return cb(new Error('Please upload an image'))
         }
-        cb(undefined, true)
-        /*
-        cb(new Error('Please upload an Image'));
-        cb(undefined, true);//accept upload
-        cb(undefined, false);//reject 
-        */
+        cb(undefined, true)//accept upload
     }
 })
 router.post('/users/me/image', auth,upload.single('image'), async(req,res) => {
