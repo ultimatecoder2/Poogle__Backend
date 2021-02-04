@@ -84,6 +84,7 @@ userSchema.methods.toJSON = function(){
 	delete userObject.password
 	delete userObject.tokens
 	delete userObject.image
+	return userObject;
 }
 
 userSchema.statics.findByCredentials = async (email, password) => {
