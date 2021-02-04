@@ -24,13 +24,13 @@ const upload = multer({
 });
 
 // app.use(logger('dev'));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 //app.use(express.static(path.join(__dirname, '../public')));
 app.use("/uploads", express.static("uploads"));
 
-app.use(cors());
 app.use(userRouter);
 app.use(spaceRouter);
 app.use(questionRouter);
@@ -51,7 +51,7 @@ app.use(function (err, req, res, next) {
 	// set locals, only providing error in development
 	res.locals.message = err.message;
 	res.locals.error = req.app.get("env") === "development" ? err : {};
-	if(err){
+	if (err) {
 		console.log(err);
 		console.log("Hi fams");
 	}
