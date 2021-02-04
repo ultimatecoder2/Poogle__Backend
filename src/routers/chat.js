@@ -31,6 +31,7 @@ db.once("open", () => {
 
 // sending msgs
 router.post("/messages", auth, async (req, res) => {
+	console.log("go");
 	const sender = req.user._id;
 	const msg = req.body;
 	const reciever = req.to;

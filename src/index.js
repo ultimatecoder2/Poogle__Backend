@@ -42,9 +42,9 @@ app.use(uploadRouter);
 app.use(chatRouter);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-	next(new Error(404));
-});
+// app.use(function (req, res, next) {
+// 	next(new Error(404));
+// });
 
 // error handler
 app.use(function (err, req, res, next) {
