@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+
 const userSchema = new mongoose.Schema(
 	{
 		user_name: {
@@ -52,6 +53,9 @@ const userSchema = new mongoose.Schema(
 				ref: "Spaces",
 			},
 		],
+		image:{
+			type:Buffer
+		},
 		tokens: [
 			{
 				// an array to store all the login tokens of the user
@@ -74,6 +78,13 @@ userSchema.methods.generateAuthToken = async function () {
 	await user.save();
 	return token;
 };
+userSchema.methods.toJSON = function(){
+	const user = this;
+	const userObject = user.toObject()
+	delete userObject.password
+	delete userObject.tokens
+	delete userObject.image
+}
 
 userSchema.statics.findByCredentials = async (email, password) => {
 	const user = await User.findOne({
