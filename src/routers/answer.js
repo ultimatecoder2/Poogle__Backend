@@ -11,7 +11,7 @@ answerRouter.route('/answers')
 .get( (req, res, next) => {
 
     Answers.find({})
-    //.populate('author')
+    .populate('author')
     .then((answers) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -22,11 +22,10 @@ answerRouter.route('/answers')
 .post( (req,res,next) => {
     
     if (req.body != null) {
-        //req.body.author = req.user._id;
         Answers.create(req.body)
         .then((answer) => {
             Answers.findById(answer._id)
-            //.populate('author')
+            .populate('author')
             .then((answer) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -56,7 +55,7 @@ answerRouter.route('/answers')
 answerRouter.route('/answers/:ansId')
 .get( (req,res,next) => {
     Answers.findById(req.params.ansId)
-    //.populate('author')
+    .populate('author')
     .then((answer) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -79,7 +78,7 @@ answerRouter.route('/answers/:ansId')
             }, { new: true })
             .then((question) => {
                 Questions.findById(question._id)
-                //.populate('author')
+                .populate('author')
                 .then((question) => {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');
