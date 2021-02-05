@@ -31,7 +31,6 @@ app.use(express.urlencoded({ extended: false }));
 //app.use(express.static(path.join(__dirname, '../public')));
 app.use("/uploads", express.static("uploads"));
 
-
 app.use(userRouter);
 app.use(spaceRouter);
 app.use(questionRouter);
@@ -43,16 +42,16 @@ app.use(uploadRouter);
 app.use(chatRouter);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-	next(new Error(404));
-});
+// app.use(function (req, res, next) {
+// 	next(new Error(404));
+// });
 
 // error handler
 app.use(function (err, req, res, next) {
 	// set locals, only providing error in development
 	res.locals.message = err.message;
 	res.locals.error = req.app.get("env") === "development" ? err : {};
-	if(err){
+	if (err) {
 		console.log(err);
 		console.log("Hi fams");
 	}
