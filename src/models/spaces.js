@@ -30,5 +30,12 @@ const spaceSchema = new mongoose.Schema({
 	],
 });
 
+spaceSchema.methods.toJSON = function(){
+	const space = this;
+	const spaceObject = space.toObject()
+	delete spaceObject.image
+	return spaceObject;
+}
+
 const Spaces = mongoose.model("Space", spaceSchema);
 module.exports = Spaces;
