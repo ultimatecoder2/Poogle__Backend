@@ -20,7 +20,7 @@ questionRouter.route('/questions')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post((req,res,next) => {
+.post(auth, (req,res,next) => {
     
     if (req.body != null) {
         Questions.create(req.body)
@@ -64,16 +64,11 @@ questionRouter.route('/questions/:quesId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put((req, res, next) => {
+.put(auth, (req, res, next) => {
     Questions.findById(req.params.quesId)
     .then((question) => {
         if (question != null) {
-            if (!question.author.equals(req.user._id)) {
-                var err = new Error('You are not authorized to update this question!');
-                err.status = 403;
-                return next(err);
-            }
-            req.body.author = req.user._id;
+            
             Questions.findByIdAndUpdate(req.params.quesId, {
                 $set: req.body
             }, { new: true })
@@ -95,16 +90,12 @@ questionRouter.route('/questions/:quesId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete((req, res, next) => {
+.delete(auth, (req, res, next) => {
 
     Questions.findById(req.params.quesId)
     .then((question) => {
         if (question != null) {
-            /*if (!question.author.equals(req.user._id)) {
-                var err = new Error('You are not authorized to delete this question!');
-                err.status = 403;
-                return next(err);
-            }*/
+        
             Questions.findByIdAndRemove(req.params.quesId)
             .then((resp) => {
                 res.statusCode = 200;

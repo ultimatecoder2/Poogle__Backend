@@ -19,7 +19,7 @@ answerRouter.route('/answers')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post( (req,res,next) => {
+.post(auth, (req,res,next) => {
     
     if (req.body != null) {
         Answers.create(req.body)
@@ -63,7 +63,7 @@ answerRouter.route('/answers/:ansId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put( (req, res, next) => {
+.put(auth, (req, res, next) => {
     Answers.findById(req.params.ansId)
     .then((answer) => {
         if (answer != null) {
@@ -94,17 +94,17 @@ answerRouter.route('/answers/:ansId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete( (req, res, next) => {
+.delete(auth, (req, res, next) => {
 
-    Questions.findById(req.params.quesId)
-    .then((question) => {
-        if (question != null) {
-            if (!question.author.equals(req.user._id)) {
+    Answers.findById(req.params.ansId)
+    .then((answer) => {
+        if (answer != null) {
+            /*if (!question.author.equals(req.user._id)) {
                 var err = new Error('You are not authorized to delete this question!');
                 err.status = 403;
                 return next(err);
-            }
-            Questions.findByIdAndRemove(req.params.ansId)
+            }*/
+            Answers.findByIdAndRemove(req.params.ansId)
             .then((resp) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -113,7 +113,7 @@ answerRouter.route('/answers/:ansId')
             .catch((err) => next(err));
         }
         else {
-            err = new Error('Question with id ' + req.params.ansId + ' not found');
+            err = new Error('Answer with id ' + req.params.ansId + ' not found');
             err.status = 404;
             return next(err);            
         }

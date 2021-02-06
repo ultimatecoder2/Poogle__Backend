@@ -19,9 +19,8 @@ questionCommentRouter.route('/questionComments')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post( (req, res, next) => {
+.post(auth, (req, res, next) => {
     if (req.body != null) {
-        req.body.author = req.user._id;
         QuestionComments.create(req.body)
         .then((comment) => {
             QuestionComments.findById(comment._id)
@@ -57,7 +56,7 @@ questionCommentRouter.route('/questionComments/:commentId')
     res.statusCode = 403;
     res.end('POST operation not supported on /questionComments/'+ req.params.commentId);
 })
-.put( (req, res, next) => {
+.put(auth, (req, res, next) => {
     QuestionComments.findById(req.params.commentId)
     .then((comment) => {
         if (comment != null) {
@@ -88,15 +87,11 @@ questionCommentRouter.route('/questionComments/:commentId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete( (req, res, next) => {
+.delete(auth, (req, res, next) => {
     QuestionComments.findById(req.params.commentId)
     .then((comment) => {
         if (comment != null) {
-            if (!comment.author.equals(req.user._id)) {
-                var err = new Error('You are not authorized to delete this comment!');
-                err.status = 403;
-                return next(err);
-            }
+    
             QuestionComments.findByIdAndRemove(req.params.commentId)
             .then((resp) => {
                 res.statusCode = 200;

@@ -20,7 +20,7 @@ spaceRouter.route('/spaces')
     //const skip = req.query.skip;
 
     //Spaces.find({}, undefined, { skip, limit: 4 }).sort('_id')
-    Spaces.find({})                // Same as before, always use 'skip' first
+    Spaces.find({}).limit(4)                // Same as before, always use 'skip' first
     .then((spaces) => {
         res.statusCode = 200,
         res.setHeader('Content-Type', 'application/json');
