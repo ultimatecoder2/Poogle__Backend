@@ -17,9 +17,7 @@ const answerSchema = new mongoose.Schema(
 		dateNum: {
 			type: Number,
 			required: true,
-		},
-		links: [String],
-		imageUrls: [String],
+		}
 	},
 	{ timestamps: true }
 );

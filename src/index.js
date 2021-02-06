@@ -12,6 +12,7 @@ const chatRouter = require("./routers/chat");
 const spaceRouter = require("./routers/spaces");
 const questionRouter = require("./routers/question");
 const questionCommentRouter = require("./routers/questionComments");
+const questionReactionRouter = require("./routers/questionReactions");
 const blogRouter = require("./routers/blogs");
 const blogCommentRouter = require("./routers/blogComments");
 const answerRouter = require("./routers/answer");
@@ -35,11 +36,13 @@ app.use(userRouter);
 app.use(spaceRouter);
 app.use(questionRouter);
 app.use(questionCommentRouter);
+app.use(questionReactionRouter);
 app.use(blogRouter);
 app.use(blogCommentRouter);
 app.use(answerRouter);
 app.use(uploadRouter);
 app.use(chatRouter);
+
 
 // catch 404 and forward to error handler
  app.use(function (req, res, next) {

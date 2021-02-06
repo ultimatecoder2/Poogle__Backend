@@ -9,7 +9,7 @@ const spaceSchema = new mongoose.Schema({
 	},
 	stringId:{
 		type:String, 
-		required:true,
+		//required:true,
 		unique:true,
 		trim:true
 	},

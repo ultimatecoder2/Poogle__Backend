@@ -4,25 +4,6 @@ const Questions = require('../models/questions');
 const auth = require('../middleware/auth');
 const multer = require("multer");
 
-// STORAGE MULTER CONFIG
-/*let storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "uploads/questions");
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}_${file.originalname}`);
-    },
-    fileFilter: (req, file, cb) => {
-        const ext = path.extname(file.originalname)
-        if (ext !== '.jpg' && ext !== '.png' && ext !== '.mp4') {
-            return cb(res.status(400).end('only jpg, png, mp4 is allowed'), false);
-        }
-        cb(null, true)
-    }
-});
-
-const upload = multer({ storage: storage }).single("file");*/
-
 const questionRouter = express.Router();
 
 questionRouter.use(bodyParser.json());
@@ -39,10 +20,9 @@ questionRouter.route('/questions')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post( (req,res,next) => {
+.post(auth, (req,res,next) => {
     
     if (req.body != null) {
-        //req.body.author = req.user._id;
         Questions.create(req.body)
         .then((question) => {
             Questions.findById(question._id)
@@ -84,16 +64,11 @@ questionRouter.route('/questions/:quesId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put( (req, res, next) => {
+.put(auth, (req, res, next) => {
     Questions.findById(req.params.quesId)
     .then((question) => {
         if (question != null) {
-            if (!question.author.equals(req.user._id)) {
-                var err = new Error('You are not authorized to update this question!');
-                err.status = 403;
-                return next(err);
-            }
-            req.body.author = req.user._id;
+            
             Questions.findByIdAndUpdate(req.params.quesId, {
                 $set: req.body
             }, { new: true })
@@ -120,11 +95,7 @@ questionRouter.route('/questions/:quesId')
     Questions.findById(req.params.quesId)
     .then((question) => {
         if (question != null) {
-            if (!question.author.equals(req.user._id)) {
-                var err = new Error('You are not authorized to delete this question!');
-                err.status = 403;
-                return next(err);
-            }
+        
             Questions.findByIdAndRemove(req.params.quesId)
             .then((resp) => {
                 res.statusCode = 200;
