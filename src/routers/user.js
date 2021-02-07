@@ -62,8 +62,16 @@ router.post('/users/logoutAll',auth, async(req,res) => {
 });
 
 //get user personal details
-router.get('/users/me', auth, async(req,res)=>{
-    res.send(req.user); 
+router.get('/users/:id', async(req,res)=>{
+    try{
+        console.log(req.params.id);
+        let user  = await User.findById(req.params.id);
+        const {user_name, name, email, about} = user;
+        res.send({user_name, name, email, about})
+    }catch(e){
+        console.log(e)
+        res.status(500).send();
+    } 
 });
 
 const upload = multer({
