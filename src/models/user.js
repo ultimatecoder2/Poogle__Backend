@@ -56,6 +56,7 @@ const userSchema = new mongoose.Schema(
 		image:{
 			type:Buffer
 		},
+		
 		tokens: [
 			{
 				// an array to store all the login tokens of the user
