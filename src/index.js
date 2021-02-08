@@ -18,6 +18,7 @@ const blogCommentRouter = require("./routers/blogComments");
 const answerRouter = require("./routers/answer");
 const answerReactionRouter = require("./routers/answerReactions");
 const uploadRouter = require("./routers/upload");
+const contactRouter =  require("./routers/contact");
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -44,12 +45,14 @@ app.use(answerRouter);
 app.use(answerReactionRouter);
 app.use(uploadRouter);
 app.use(chatRouter);
+app.use(contactRouter);
 
 
 // catch 404 and forward to error handler
 // app.use(function (req, res, next) {
 // 	next(new Error(404));
 // });
+
 
 // error handler
 app.use(function (err, req, res, next) {

@@ -31,10 +31,9 @@ db.once("open", () => {
 
 // sending msgs
 router.post("/messages", auth, async (req, res) => {
-	console.log("go");
 	const sender = req.user._id;
-	const msg = req.body;
-	const reciever = req.to;
+	const msg = req.body.msg;
+	const reciever = req.body.to;
 	try {
 		const message = new Chat({
 			sender,
@@ -53,8 +52,30 @@ router.get("/messages", auth, async (req, res) => {
 	const me = req.user._id;
 	const chat = await Chat.find({
 		$or: [{ sender: me }, { reciever: me }],
-	});
-	res.status(200).send(chat);
+	})
+		.sort({ createdAt: "desc" })
+		.populate("sender")
+		.populate("reciever")
+		.exec();
+	const idx = {};
+	const formatedChat = [];
+	for (var i = 0; i < chat.length; i++) {
+		const sender = chat[i].sender._id.equals(me) ? "me" : "other";
+		const msg = chat[i].msg;
+		const to = chat[i].sender._id === me ? chat[i].sender : chat[i].reciever;
+		if (to in idx) {
+			const index = idx[to];
+			formatedChat[index].chat.push({ sender, msg });
+		} else {
+			idx[to] = formatedChat.length;
+			formatedChat.push({
+				_id: to._id,
+				name: to.name,
+				chat: [{ sender, msg }],
+			});
+		}
+	}
+	res.status(200).send(formatedChat);
 });
 
 module.exports = router;
