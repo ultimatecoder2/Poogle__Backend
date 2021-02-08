@@ -16,6 +16,7 @@ const questionReactionRouter = require("./routers/questionReactions");
 const blogRouter = require("./routers/blogs");
 const blogCommentRouter = require("./routers/blogComments");
 const answerRouter = require("./routers/answer");
+const answerReactionRouter = require("./routers/answerReactions");
 const uploadRouter = require("./routers/upload");
 
 const app = express();
@@ -40,6 +41,7 @@ app.use(questionReactionRouter);
 app.use(blogRouter);
 app.use(blogCommentRouter);
 app.use(answerRouter);
+app.use(answerReactionRouter);
 app.use(uploadRouter);
 app.use(chatRouter);
 
