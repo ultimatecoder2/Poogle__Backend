@@ -62,14 +62,17 @@ router.get("/messages", auth, async (req, res) => {
 	for (var i = 0; i < chat.length; i++) {
 		const sender = chat[i].sender._id.equals(me) ? "me" : "other";
 		const msg = chat[i].msg;
-		const to = chat[i].sender._id === me ? chat[i].reciever : chat[i].sender;
-		console.log(to);
+		const to = chat[i].sender._id === me ? chat[i].sender : chat[i].reciever;
 		if (to in idx) {
 			const index = idx[to];
 			formatedChat[index].chat.push({ sender, msg });
 		} else {
 			idx[to] = formatedChat.length;
-			formatedChat.push({ name: to.name, chat: [{ sender, msg }] });
+			formatedChat.push({
+				_id: to._id,
+				name: to.name,
+				chat: [{ sender, msg }],
+			});
 		}
 	}
 	res.status(200).send(formatedChat);
