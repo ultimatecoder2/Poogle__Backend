@@ -62,7 +62,6 @@ const userSchema = new mongoose.Schema(
 		image:{
 			type:Buffer
 		},
-		
 		tokens: [
 			{
 				// an array to store all the login tokens of the user
@@ -72,6 +71,28 @@ const userSchema = new mongoose.Schema(
 				},
 			},
 		],
+		questions: [
+			{
+				question:{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Question"}
+			},
+		],
+		answers: [
+			{
+				answer:{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "Answer"}
+			},
+		],
+		blogs: [
+			{
+				blog:{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Blog"}
+			},
+		],
+		
 	},
 	{ timestamps: true }
 );

@@ -66,8 +66,8 @@ router.get('/users/:id', async(req,res)=>{
     try{
         console.log(req.params.id);
         let user  = await User.findById(req.params.id);
-        const {user_name, name, email, about} = user;
-        res.send({user_name, name, email, about})
+        const {user_name, name, email, about, blogs, answers, questions, interests, image} = user;
+        res.send({user_name, name, email, about, blogs, answers, questions, interests, image})
     }catch(e){
         console.log(e)
         res.status(500).send();
