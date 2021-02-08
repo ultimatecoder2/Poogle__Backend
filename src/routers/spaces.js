@@ -15,7 +15,12 @@ spaceRouter.use(bodyParser.json());
 spaceRouter.route('/spaces')
 .get((req, res, next) => {
 
-    Spaces.find({})
+    // const skip =
+    //   req.query.skip && /^\d+$/.test(req.query.skip) ? Number(req.query.skip) : 0;
+    //const skip = req.query.skip;
+
+    //Spaces.find({}, undefined, { skip, limit: 4 }).sort('_id')
+    Spaces.find({}).limit(4)                // Same as before, always use 'skip' first
     .then((spaces) => {
         res.statusCode = 200,
         res.setHeader('Content-Type', 'application/json');

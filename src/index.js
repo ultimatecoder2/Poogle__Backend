@@ -12,10 +12,12 @@ const chatRouter = require("./routers/chat");
 const spaceRouter = require("./routers/spaces");
 const questionRouter = require("./routers/question");
 const questionCommentRouter = require("./routers/questionComments");
+const questionReactionRouter = require("./routers/questionReactions");
 const blogRouter = require("./routers/blogs");
 const blogCommentRouter = require("./routers/blogComments");
 const answerRouter = require("./routers/answer");
 const uploadRouter = require("./routers/upload");
+const contactRouter =  require("./routers/contact");
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -23,7 +25,7 @@ const upload = multer({
 	dest: "images",
 });
 
-// app.use(logger('dev'));
+app.use(logger('dev'));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -35,16 +37,20 @@ app.use(userRouter);
 app.use(spaceRouter);
 app.use(questionRouter);
 app.use(questionCommentRouter);
+app.use(questionReactionRouter);
 app.use(blogRouter);
 app.use(blogCommentRouter);
 app.use(answerRouter);
 app.use(uploadRouter);
 app.use(chatRouter);
+app.use(contactRouter);
+
 
 // catch 404 and forward to error handler
 // app.use(function (req, res, next) {
 // 	next(new Error(404));
 // });
+
 
 // error handler
 app.use(function (err, req, res, next) {

@@ -49,8 +49,14 @@ const userSchema = new mongoose.Schema(
 		},
 		interests: [
 			{
+				interest:{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: "Spaces",
+				ref: "Spaces"},
+				voteCount:{
+					type:Number,
+					default:0,
+					min:0
+				}
 			},
 		],
 		image:{
@@ -84,6 +90,7 @@ userSchema.methods.toJSON = function(){
 	delete userObject.password
 	delete userObject.tokens
 	delete userObject.image
+	return userObject;
 }
 
 userSchema.statics.findByCredentials = async (email, password) => {
