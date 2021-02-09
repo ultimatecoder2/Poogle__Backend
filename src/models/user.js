@@ -50,8 +50,8 @@ const userSchema = new mongoose.Schema(
 		interests: [
 			{
 				interest:{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: "Spaces"},
+				type: String
+				},
 				voteCount:{
 					type:Number,
 					default:0,
