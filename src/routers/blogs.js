@@ -101,11 +101,6 @@ blogRouter.route('/blogs/:blogId')
     Blogs.findById(req.params.blogId)
     .then((blog) => {
         if (blog != null) {
-            if (!blog.author.equals(req.user._id)) {
-                var err = new Error('You are not authorized to delete this blog!');
-                err.status = 403;
-                return next(err);
-            }
             Blogs.findByIdAndRemove(req.params.blogId)
             .then((resp) => {
                 res.statusCode = 200;
