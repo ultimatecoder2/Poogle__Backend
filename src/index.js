@@ -19,7 +19,7 @@ const blogReactionRouter = require("./routers/blogReactions");
 const answerRouter = require("./routers/answer");
 const answerReactionRouter = require("./routers/answerReactions");
 const uploadRouter = require("./routers/upload");
-const contactRouter =  require("./routers/contact");
+const contactRouter = require("./routers/contact");
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -27,7 +27,7 @@ const upload = multer({
 	dest: "images",
 });
 
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -49,12 +49,10 @@ app.use(uploadRouter);
 app.use(chatRouter);
 app.use(contactRouter);
 
-
 // catch 404 and forward to error handler
- app.use(function (req, res, next) {
+app.use(function (req, res, next) {
 	next(createError(404));
- });
-
+});
 
 // error handler
 app.use(function (err, req, res, next) {
@@ -63,7 +61,6 @@ app.use(function (err, req, res, next) {
 	res.locals.error = req.app.get("env") === "development" ? err : {};
 	if (err) {
 		console.log(err);
-		console.log("Hi fams");
 	}
 	// render the error page
 	res.status(err.status || 500);
