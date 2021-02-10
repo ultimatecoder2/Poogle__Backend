@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const auth = require('../middleware/auth');
 
-const BlogComments = require('../models/questionComments');
+const BlogComments = require('../models/blogComments');
 
 const blogCommentRouter = express.Router();
 

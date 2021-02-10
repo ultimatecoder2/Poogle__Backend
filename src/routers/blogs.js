@@ -12,7 +12,7 @@ blogRouter.route('/blogs')
 .get((req, res, next) => {
 
     Blogs.find({})
-    //.populate('author')
+    .populate('author')
     .then((blog) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
