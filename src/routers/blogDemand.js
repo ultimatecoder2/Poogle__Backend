@@ -1,43 +1,42 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const Blogs = require('../models/blogs');
+const BlogDemands = require('../models/blogDemands');
 const auth = require('../middleware/auth');
 const multer = require("multer");
 
-const blogRouter = express.Router();
+const blogDemandRouter = express.Router();
 
-blogRouter.use(bodyParser.json());
+blogDemandRouter.use(bodyParser.json());
 
-blogRouter.route('/blogs')
+blogDemandRouter.route('/blogDemands')
 .get((req, res, next) => {
 
-    Blogs.find({})
+    BlogDemands.find({})
     .populate('author')
-    .then((blog) => {
+    .then((blogDemand) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(blog);
+        res.json(blogDemand);
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth,(req,res,next) => {
+.post( (req,res,next) => {
     
     if (req.body != null) {
-        //req.body.author = req.user._id;
-        Blogs.create(req.body)
-        .then((blog) => {
-            Blogs.findById(blog._id)
+        BlogDemands.create(req.body)
+        .then((blogDemand) => {
+            BlogDemands.findById(blogDemand._id)
             .populate('author')
-            .then((blog) => {
+            .then((blogDemand) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(blog);
+                res.json(blogDemand);
             })
         }, (err) => next(err))
         .catch((err) => next(err));
     }
     else {
-        err = new Error('Blog not found in request body');
+        err = new Error('Question not found in request body');
         err.status = 404;
         return next(err);
     }
@@ -46,62 +45,58 @@ blogRouter.route('/blogs')
 .put(auth, (req,res,next) => {
     
     res.statusCode = 403;
-    res.end('PUT operation not supported on /blogs');
+    res.end('PUT operation not supported on /blogDemands');
 })
 .delete(auth, (req,res,next) => {
     
     res.statusCode = 403;
-    res.end('DELETE operation not supported on /blogs');
+    res.end('DELETE operation not supported on /blogDemands');
 });
 
-blogRouter.route('/blogs/:blogId')
+blogDemandRouter.route('/blogDemands/:blogDemandId')
 .get((req,res,next) => {
-    Blogs.findById(req.params.blogId)
+    BlogDemands.findById(req.params.blogDemandId)
     .populate('author')
-    .then((blog) => {
+    .then((blogDemand) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(blog);
+        res.json(blogDemand);
     }, (err) => next(err))
     .catch((err) => next(err));
 })
 .put(auth, (req, res, next) => {
-    Blogs.findById(req.params.blogId)
-    .then((blog) => {
-        if (blog != null) {
-            if (!blog.author.equals(req.user._id)) {
-                var err = new Error('You are not authorized to update this blog!');
-                err.status = 403;
-                return next(err);
-            }
-            req.body.author = req.user._id;
-            Blogs.findByIdAndUpdate(req.params.blogId, {
+    BlogDemands.findById(req.params.blogDemandId)
+    .then((blogDemand) => {
+        if (blogDemand != null) {
+            
+            BlogDemands.findByIdAndUpdate(req.params.blogDemandId, {
                 $set: req.body
             }, { new: true })
-            .then((blog) => {
-                Blogs.findById(blog._id)
+            .then((blogDemand) => {
+                BlogDemands.findById(blogDemand._id)
                 .populate('author')
-                .then((blog) => {
+                .then((blogDemand) => {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');
-                    res.json(blog); 
+                    res.json(blogDemand); 
                 })               
             }, (err) => next(err));
         }
         else {
-            err = new Error('Blog ' + req.params.blogId + ' not found');
+            err = new Error('BlogDemand ' + req.params.blogDemandId + ' not found');
             err.status = 404;
             return next(err);            
         }
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete( auth,(req, res, next) => {
+.delete(auth, (req, res, next) => {
 
-    Blogs.findById(req.params.blogId)
-    .then((blog) => {
-        if (blog != null) {
-            Blogs.findByIdAndRemove(req.params.blogId)
+    BlogDemands.findById(req.params.blogDemandId)
+    .then((blogDemand) => {
+        if (blogDemand != null) {
+        
+            BlogDemands.findByIdAndRemove(req.params.blogDemandId)
             .then((resp) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -110,7 +105,7 @@ blogRouter.route('/blogs/:blogId')
             .catch((err) => next(err));
         }
         else {
-            err = new Error('Blog with id ' + req.params.blogId + ' not found');
+            err = new Error('BlogDemand with id ' + req.params.blogDemandId + ' not found');
             err.status = 404;
             return next(err);            
         }
@@ -118,5 +113,5 @@ blogRouter.route('/blogs/:blogId')
     .catch((err) => next(err));
 });
 
-module.exports = blogRouter;
+module.exports = blogDemandRouter;
 
