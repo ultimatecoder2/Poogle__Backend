@@ -51,6 +51,7 @@ const userSchema = new mongoose.Schema(
 			{
 				interest: {
 					type: String,
+					unique:true
 				},
 				voteCount: {
 					type: Number,
