@@ -49,18 +49,19 @@ const userSchema = new mongoose.Schema(
 		},
 		interests: [
 			{
-				interest:{
-				type: String
+				interest: {
+					type: String,
+					unique:true
 				},
-				voteCount:{
-					type:Number,
-					default:0,
-					min:0
-				}
+				voteCount: {
+					type: Number,
+					default: 0,
+					min: 0,
+				},
 			},
 		],
-		image:{
-			type:Buffer
+		image: {
+			type: Buffer,
 		},
 		tokens: [
 			{
@@ -73,26 +74,28 @@ const userSchema = new mongoose.Schema(
 		],
 		questions: [
 			{
-				question:{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: "Question"}
+				question: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "Question",
+				},
 			},
 		],
 		answers: [
 			{
-				answer:{
+				answer: {
 					type: mongoose.Schema.Types.ObjectId,
-					ref: "Answer"}
+					ref: "Answer",
+				},
 			},
 		],
 		blogs: [
 			{
-				blog:{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: "Blog"}
+				blog: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "Blog",
+				},
 			},
 		],
-		
 	},
 	{ timestamps: true }
 );
@@ -106,14 +109,14 @@ userSchema.methods.generateAuthToken = async function () {
 	await user.save();
 	return token;
 };
-userSchema.methods.toJSON = function(){
+userSchema.methods.toJSON = function () {
 	const user = this;
-	const userObject = user.toObject()
-	delete userObject.password
-	delete userObject.tokens
-	delete userObject.image
+	const userObject = user.toObject();
+	delete userObject.password;
+	delete userObject.tokens;
+	delete userObject.image;
 	return userObject;
-}
+};
 
 userSchema.statics.findByCredentials = async (email, password) => {
 	const user = await User.findOne({

@@ -21,6 +21,7 @@ const spaceSchema = new mongoose.Schema({
 			type: mongoose.Schema.Types.ObjectId, //giving reference to the user ID
 			ref: "User",
 		},
+
 	],
 	questions: [
 		{

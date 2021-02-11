@@ -53,7 +53,7 @@ router.get("/messages", auth, async (req, res) => {
 	const chat = await Chat.find({
 		$or: [{ sender: me }, { reciever: me }],
 	})
-		.sort({ createdAt: "desc" })
+		.sort({ createdAt: "asc" })
 		.populate("sender")
 		.populate("reciever")
 		.exec();
@@ -61,17 +61,21 @@ router.get("/messages", auth, async (req, res) => {
 	const formatedChat = [];
 	for (var i = 0; i < chat.length; i++) {
 		const sender = chat[i].sender._id.equals(me) ? "me" : "other";
+		const when = new Date(chat[i].createdAt);
+		const createdAt = when.toDateString();
 		const msg = chat[i].msg;
-		const to = chat[i].sender._id === me ? chat[i].sender : chat[i].reciever;
+		const to = chat[i].sender._id.equals(me)
+			? chat[i].reciever
+			: chat[i].sender;
 		if (to in idx) {
 			const index = idx[to];
-			formatedChat[index].chat.push({ sender, msg });
+			formatedChat[index].chat.push({ sender, msg, createdAt });
 		} else {
 			idx[to] = formatedChat.length;
 			formatedChat.push({
 				_id: to._id,
 				name: to.name,
-				chat: [{ sender, msg }],
+				chat: [{ sender, msg, createdAt }],
 			});
 		}
 	}
