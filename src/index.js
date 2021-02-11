@@ -9,7 +9,7 @@ require("./db/mongoose");
 
 const userRouter = require("./routers/user");
 const chatRouter = require("./routers/chat");
-const spaceRouter = require("./routers/spaces");
+const followSpaceRouter = require("./routers/followSpaces");
 const questionRouter = require("./routers/question");
 const questionCommentRouter = require("./routers/questionComments");
 const questionReactionRouter = require("./routers/questionReactions");
@@ -20,6 +20,8 @@ const answerRouter = require("./routers/answer");
 const answerReactionRouter = require("./routers/answerReactions");
 const uploadRouter = require("./routers/upload");
 const contactRouter = require("./routers/contact");
+const searchRouter = require("./routers/search");
+const feedRouter = require("./routers/homefeed");
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -36,7 +38,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/uploads", express.static("uploads"));
 
 app.use(userRouter);
-app.use(spaceRouter);
+app.use(followSpaceRouter);
 app.use(questionRouter);
 app.use(questionCommentRouter);
 app.use(questionReactionRouter);
@@ -48,6 +50,8 @@ app.use(answerReactionRouter);
 app.use(uploadRouter);
 app.use(chatRouter);
 app.use(contactRouter);
+app.use(searchRouter);
+app.use(feedRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

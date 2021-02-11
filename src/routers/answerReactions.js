@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const auth = require('../middleware/auth');
 
 const AnswerReactions = require('../models/answerReactions');
+const User = require("../models/user");
 
 const answerReactionRouter = express.Router();
 
@@ -20,9 +21,12 @@ answerReactionRouter.route('/answerReactions')
     .catch((err) => next(err));
 })
 .post(auth, (req, res, next) => {
+
+
     if (req.body != null) {
         AnswerReactions.create(req.body)
         .then((reac) => {
+
             AnswerReactions.findById(reac._id)
             .populate('author')
             .then((reaction) => {
