@@ -20,7 +20,8 @@ const blogReactionRouter = require("./routers/blogReactions");
 const answerRouter = require("./routers/answer");
 const answerReactionRouter = require("./routers/answerReactions");
 const uploadRouter = require("./routers/upload");
-const contactRouter = require("./routers/contact");
+const contactRouter =  require("./routers/contact");
+const blogDemandRouter = require("./routers/blogDemand");
 const searchRouter = require("./routers/search");
 const feedRouter = require("./routers/homefeed");
 
@@ -52,6 +53,8 @@ app.use(answerReactionRouter);
 app.use(uploadRouter);
 app.use(chatRouter);
 app.use(contactRouter);
+app.use(blogDemandRouter);
+
 app.use(searchRouter);
 app.use(feedRouter)
 
