@@ -4,14 +4,31 @@ const router = new express.Router();
 const auth = require('../middleware/auth');
 const multer = require('multer');
 const sharp = require('sharp');
-
+const Spaces = require("../models/spaces");
 //Signup
 router.post("/users", async (req, res) => {
 	const user = new User(req.body);
+    console.log(req.body);
 	try {
 		await user.save();
-		//adding authentication left
-		const token = await user.generateAuthToken()
+		const token = await user.generateAuthToken();
+        const Interests = user.interests;
+	    Interests.map(async({interest})=>{
+		const spaceId= interest;
+		let space = await Spaces.findOne({stringId: spaceId});
+		if(!space.followers){
+			space.followers = new Array;
+		}
+		space.followers.concat(user._id);
+        try{
+            space.markModified('members');
+            await space.save();
+            console.log("space success", spaceId)
+        }catch(e){
+            console.log(e);
+        }
+	})
+	
 		res.status(201).send({ user, token });
 	} catch (e) {
 		res.status(400).send(e);
@@ -146,8 +163,7 @@ router.patch('/users/me', auth, async(req,res)=>{
 
 //Delete user account forever
 router.delete('/users/me', auth, async (req,res) =>{
-    try {
-        
+    try {    
         await req.user.remove();
         res.send(req.user);
     }
@@ -155,6 +171,36 @@ router.delete('/users/me', auth, async (req,res) =>{
         res.status(500).send()
     }
 });
+
+router.patch('/follow/space', auth,async(req, res)=>{
+    try{
+        let user = req.user, data= req.body;
+        const {type, spaceId} = data; 
+        if(type=="unfollow"){
+            console.log("unfollow req")
+            //remove interest from user
+            if(user.interests){
+                user.interests = user.interests.filter((interest)=>{
+                    return interest.interest!== spaceId;
+                })
+            } 
+        }else if(type=="follow"){
+            //add at both places
+            console.log("follow req");
+            if(!user.interests){
+                user.interests=new Array;
+            }
+            user.interests = user.interests.concat({interest:spaceId});
+        }
+        await user.save()
+        res.send({user});
+            
+
+    } catch(e){
+        console.log(e);
+        res.status(400).send(e);
+    }
+})
 
 
 
