@@ -61,6 +61,14 @@ router.post('/users/logoutAll',auth, async(req,res) => {
 
 });
 
+/*router.put('/changeInterests', auth, async (req, res, next) => {
+
+    var newinterest = {interest:req.body.spaceId, voteCount:0};
+    /*User.findByIdAndUpdate(req.body.user._id, {
+        $push: { interests:  newinterest} 
+    })
+})*/
+
 //get user personal details
 router.get('/users/:id', async(req,res)=>{
     try{

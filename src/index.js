@@ -10,6 +10,7 @@ require("./db/mongoose");
 const userRouter = require("./routers/user");
 const chatRouter = require("./routers/chat");
 const followSpaceRouter = require("./routers/followSpaces");
+const spaceRouter = require('./routers/spaces');
 const questionRouter = require("./routers/question");
 const questionCommentRouter = require("./routers/questionComments");
 const questionReactionRouter = require("./routers/questionReactions");
@@ -39,6 +40,7 @@ app.use("/uploads", express.static("uploads"));
 
 app.use(userRouter);
 app.use(followSpaceRouter);
+app.use(spaceRouter);
 app.use(questionRouter);
 app.use(questionCommentRouter);
 app.use(questionReactionRouter);
