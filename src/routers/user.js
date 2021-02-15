@@ -5,6 +5,7 @@ const auth = require('../middleware/auth');
 const multer = require('multer');
 const sharp = require('sharp');
 const Spaces = require("../models/spaces");
+const upload = multer()
 //Signup
 router.post("/users", async (req, res) => {
 	const user = new User(req.body);
@@ -100,27 +101,6 @@ router.get('/users/:id', async(req,res)=>{
     } 
 });
 
-const upload = multer({
-    limits:{
-        fileSize:1000000 //1mb pic size
-    },
-    fileFilter(req, file, cb){
-        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
-            return cb(new Error('Please upload an image'))
-        }
-        cb(undefined, true)//accept upload
-    }
-})
-router.post('/users/me/image', auth,upload.single('image'), async(req,res) => {
-    const buffer = await sharp(req.file.buffer).resize({width:250, height:250}).png().toBuffer();
-    
-    req.user.image = buffer
-    await req.user.save();
-    res.send();
-}, (error, req, res, next)=>{
-    res.status(400).send({error:error.message});
-});
-
 router.delete('/users/me/image', auth, async(req, res)=>{
     req.user.image = undefined
     await req.user.save();
@@ -140,26 +120,41 @@ router.get('/users/:id/image',async(req, res)=>{
     }
 })
 
-//Update user details
-router.patch('/users/me', auth, async(req,res)=>{
-    const updates = Object.keys(req.body);
-    const allowedUpdates = ['name','email','password','about','interests'];
-    const isValidOperation = updates.every((update)=>{
-        return allowedUpdates.includes(update);
-    });
-    if(!isValidOperation){
-        return res.status(400).send({error:"Invalid updates!"})
+router.patch('/users/me/update', auth, upload.single('image'), async(req, res)=>{
+    let image = req.file;
+    const {name, email, description, password, graduation_year, field} = req.body;
+    if(name){
+        req.user.name = name;
+    }
+    if(email){
+        req.user.email = email;
+    }
+    if(password){
+        req.user.password = password;
+    }
+    if(description){
+        req.user.about.description = description;
+    }
+    if(field){
+        req.user.about.field = field;
+    }
+    if(graduation_year){
+        req.user.about.graduation_year = graduation_year;
     }
     try{
-        const user = req.user;
-		updates.forEach((update) => user[update]= req.body[update] );//TEST for about. Maybe need to add special case for that
-        await user.save();
-        res.send(user);
+        if(image){
+            const buffer = await sharp(req.file.buffer).resize({width:250, height:250}).png().toBuffer();
+            req.user.image = buffer;
+            console.log("File", buffer);
+        }
+        await req.user.save();
+        res.send({message:"Success"});    
+    }catch(e){
+        res.status(500).send(e);
     }
-    catch(e){
-        res.status(400).send(e);
-    }
+    
 });
+
 
 //Delete user account forever
 router.delete('/users/me', auth, async (req,res) =>{
@@ -177,7 +172,6 @@ router.patch('/follow/space', auth,async(req, res)=>{
         let user = req.user, data= req.body;
         const {type, spaceId} = data; 
         if(type=="unfollow"){
-            console.log("unfollow req")
             //remove interest from user
             if(user.interests){
                 user.interests = user.interests.filter((interest)=>{
@@ -185,8 +179,7 @@ router.patch('/follow/space', auth,async(req, res)=>{
                 })
             } 
         }else if(type=="follow"){
-            //add at both places
-            console.log("follow req");
+            //add interest in users array
             if(!user.interests){
                 user.interests=new Array;
             }
