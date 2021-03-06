@@ -125,17 +125,18 @@ router.get("/users", bodyParser, async (req, res) => {
 	const user = await User.find({});
 	var selectedUsers = [];
 	var count = 0;
+
 	user.sort((user1, user2) => {
 		var val1 = -1,
 			val2 = -1;
 		for (var i = 0; i < user1.interests.length; i++) {
-			if (user1.interests[i] == req.body.interest) {
-				val1 = user1.interests.voteCount;
+			if (user1.interests[i].interest == req.body.interest) {
+				val1 = user1.interests[i].voteCount;
 			}
 		}
 		for (var i = 0; i < user2.interests.length; i++) {
-			if (user2.interests[i] == req.body.interest) {
-				val2 = user2.interests.voteCount;
+			if (user2.interests[i].interest == req.body.interest) {
+				val2 = user2.interests[i].voteCount;
 			}
 		}
 		if (val1 < val2) return 1;
@@ -143,11 +144,8 @@ router.get("/users", bodyParser, async (req, res) => {
 		else return 0;
 	});
 	for (var i = 0; i < user.length; i++) {
-		// console.log(user[i].interests);
 		for (var j = 0; j < user[i].interests.length; j++) {
-			// console.log(user[i].interests);
 			if (user[i].interests[j].interest === req.body.interest) {
-				console.log(user[i].interests[j].interest);
 				selectedUsers.push(user[i]);
 				count += 1;
 				break;
