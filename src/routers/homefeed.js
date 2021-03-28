@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Questions = require('../models/questions');
 const auth = require('../middleware/auth');
+const cors = require('./cors');
 const multer = require("multer");
 
 const feedRouter = express.Router();
@@ -9,7 +10,8 @@ const feedRouter = express.Router();
 feedRouter.use(bodyParser.json());
 
 feedRouter.route('/homeFeed')
-.get((req, res, next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req, res, next) => {
         //JSON.parse(req.query.interests)
 
     Questions.find({"tagIds" : { $in: req.query.interests.split(',')}})
@@ -22,7 +24,7 @@ feedRouter.route('/homeFeed')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth, (req,res,next) => {
+.post(cors.corsWithOptions,auth, (req,res,next) => {
     
     if (req.body != null) {
         Questions.create(req.body)
@@ -44,19 +46,20 @@ feedRouter.route('/homeFeed')
     }
 
 })
-.put(auth, (req,res,next) => {
+.put(cors.corsWithOptions,auth, (req,res,next) => {
     
     res.statusCode = 403;
     res.end('PUT operation not supported on /questions');
 })
-.delete(auth, (req,res,next) => {
+.delete(cors.corsWithOptions,auth, (req,res,next) => {
     
     res.statusCode = 403;
     res.end('DELETE operation not supported on /questions');
 });
 
 feedRouter.route('/homeFeed/:quesId')
-.get((req,res,next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req,res,next) => {
     Questions.findById(req.params.quesId)
     .populate('author')
     .then((question) => {
@@ -66,7 +69,7 @@ feedRouter.route('/homeFeed/:quesId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put(auth, (req, res, next) => {
+.put(cors.corsWithOptions,auth, (req, res, next) => {
     Questions.findById(req.params.quesId)
     .then((question) => {
         if (question != null) {
@@ -92,7 +95,7 @@ feedRouter.route('/homeFeed/:quesId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete(auth, (req, res, next) => {
+.delete(cors.corsWithOptions,auth, (req, res, next) => {
 
     Questions.findById(req.params.quesId)
     .then((question) => {

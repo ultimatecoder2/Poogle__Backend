@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const auth = require('../middleware/auth');
-
+const cors = require('./cors');
 const AnswerReactions = require('../models/answerReactions');
 const User = require("../models/user");
 
@@ -10,7 +10,8 @@ const answerReactionRouter = express.Router();
 answerReactionRouter.use(bodyParser.json());
 
 answerReactionRouter.route('/answerReactions')
-.get( (req,res,next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req,res,next) => {
     AnswerReactions.find()
     .populate('author')
     .then((answerReactions) => {
@@ -20,7 +21,7 @@ answerReactionRouter.route('/answerReactions')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth, (req, res, next) => {
+.post(cors.corsWithOptions,auth, (req, res, next) => {
 
 
     if (req.body != null) {
@@ -46,7 +47,8 @@ answerReactionRouter.route('/answerReactions')
 })
 
 answerReactionRouter.route('/answerReactions/:reacId')
-.get( (req,res,next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req,res,next) => {
     AnswerReactions.findById(req.params.reacId)
     .populate('author')
     .then((reac) => {
@@ -56,15 +58,15 @@ answerReactionRouter.route('/answerReactions/:reacId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth, (req, res, next) => {
+.post(cors.corsWithOptions,auth, (req, res, next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /answerReactions/'+ req.params.reacId);
 })
-.put(auth, (req, res, next) => {
+.put(cors.corsWithOptions,auth, (req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /answerReactions/'+ req.params.reacId);
 })
-.delete(auth, (req, res, next) => {
+.delete(cors.corsWithOptions,auth, (req, res, next) => {
     AnswerReactions.findById(req.params.reacId)
     .then((reac) => {
         if (reac != null) {

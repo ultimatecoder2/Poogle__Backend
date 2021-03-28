@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Spaces = require('../models/spaces');
 const auth = require('../middleware/auth');
+const cors = require('./cors');
 const multer = require('multer');
 const sharp = require('sharp');
 const formidable = require('formidable');

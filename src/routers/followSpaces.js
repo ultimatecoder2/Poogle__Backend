@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Spaces = require('../models/spaces');
 const auth = require('../middleware/auth');
+const cors = require('./cors');
 const multer = require('multer');
 const sharp = require('sharp');
 const formidable = require('formidable');
@@ -12,7 +13,8 @@ const followSpaceRouter = express.Router();
 followSpaceRouter.use(bodyParser.json());
 
 followSpaceRouter.route('/followedSpaces')
-.get((req, res, next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req, res, next) => {
 
     Spaces.find({"stringId" : { $in: req.query.interests.split(',')}})
     .then((spaces) => {
@@ -22,16 +24,16 @@ followSpaceRouter.route('/followedSpaces')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post((req, res, next)=>{
+.post(cors.corsWithOptions,(req, res, next)=>{
     res.statusCode = 403;
     res.end('POST operation not supported on /spaces');
 })
-.put(auth, (req, res, next) => {
+.put(cors.corsWithOptions,auth, (req, res, next) => {
 
     res.statusCode = 403;
     res.end('PUT operation not supported on /spaces');
 })
-.delete(auth, (req, res, next) => {
+.delete(cors.corsWithOptions,auth, (req, res, next) => {
 
     res.statusCode = 403;
     res.end('DELETE operation not supported on /spaces');

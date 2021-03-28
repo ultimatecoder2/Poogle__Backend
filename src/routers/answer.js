@@ -2,13 +2,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Answers = require('../models/answers');
 const auth = require('../middleware/auth');
-
+const cors = require('./cors');
 const answerRouter = express.Router();
 
 answerRouter.use(bodyParser.json());
 
 answerRouter.route('/answers')
-.get( (req, res, next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req, res, next) => {
 
     Answers.find({})
     .populate('author')
@@ -19,7 +20,7 @@ answerRouter.route('/answers')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth, (req,res,next) => {
+.post(cors.corsWithOptions,auth, (req,res,next) => {
     
     if (req.body != null) {
         Answers.create(req.body)
@@ -41,19 +42,20 @@ answerRouter.route('/answers')
     }
 
 })
-.put(auth, (req,res,next) => {
+.put(cors.corsWithOptions,auth, (req,res,next) => {
     
     res.statusCode = 403;
     res.end('PUT operation not supported on /answers');
 })
-.delete(auth, (req,res,next) => {
+.delete(cors.corsWithOptions,auth, (req,res,next) => {
     
     res.statusCode = 403;
     res.end('DELETE operation not supported on /answers');
 });
 
 answerRouter.route('/answers/:ansId')
-.get( (req,res,next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req,res,next) => {
     Answers.findById(req.params.ansId)
     .populate('author')
     .then((answer) => {
@@ -63,7 +65,7 @@ answerRouter.route('/answers/:ansId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put(auth, (req, res, next) => {
+.put(cors.corsWithOptions,auth, (req, res, next) => {
     Answers.findById(req.params.ansId)
     .then((answer) => {
         if (answer != null) {
@@ -94,7 +96,7 @@ answerRouter.route('/answers/:ansId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete(auth, (req, res, next) => {
+.delete(cors.corsWithOptions,auth, (req, res, next) => {
 
     Answers.findById(req.params.ansId)
     .then((answer) => {

@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const auth = require('../middleware/auth');
-
+const cors = require('./cors');
 const BlogReactions = require('../models/blogReactions');
 
 const blogReactionRouter = express.Router();
@@ -9,7 +9,8 @@ const blogReactionRouter = express.Router();
 blogReactionRouter.use(bodyParser.json());
 
 blogReactionRouter.route('/blogReactions')
-.get( (req,res,next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req,res,next) => {
     BlogReactions.find()
     .populate('author')
     .then((blogReactions) => {
@@ -19,7 +20,7 @@ blogReactionRouter.route('/blogReactions')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth, (req, res, next) => {
+.post(cors.corsWithOptions,auth, (req, res, next) => {
     if (req.body != null) {
         BlogReactions.create(req.body)
         .then((reac) => {
@@ -42,7 +43,8 @@ blogReactionRouter.route('/blogReactions')
 })
 
 blogReactionRouter.route('/blogReactions/:reacId')
-.get( (req,res,next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req,res,next) => {
     BlogReactions.findById(req.params.reacId)
     .populate('author')
     .then((reac) => {
@@ -52,15 +54,15 @@ blogReactionRouter.route('/blogReactions/:reacId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth, (req, res, next) => {
+.post(cors.corsWithOptions,auth, (req, res, next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /blogReactions/'+ req.params.reacId);
 })
-.put(auth, (req, res, next) => {
+.put(cors.corsWithOptions,auth, (req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /blogReactions/'+ req.params.reacId);
 })
-.delete(auth, (req, res, next) => {
+.delete(cors.corsWithOptions,auth, (req, res, next) => {
     BlogReactions.findById(req.params.reacId)
     .then((comment) => {
         if (comment != null) {

@@ -3,13 +3,14 @@ const bodyParser = require('body-parser');
 const Questions = require('../models/questions');
 const auth = require('../middleware/auth');
 const multer = require("multer");
-
+const cors = require('./cors');
 const questionRouter = express.Router();
 
 questionRouter.use(bodyParser.json());
 
 questionRouter.route('/questions')
-.get((req, res, next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req, res, next) => {
 
     Questions.find({})
     .populate('author')
@@ -20,7 +21,7 @@ questionRouter.route('/questions')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth, (req,res,next) => {
+.post(cors.corsWithOptions,auth, (req,res,next) => {
     
     if (req.body != null) {
         Questions.create(req.body)
@@ -42,19 +43,20 @@ questionRouter.route('/questions')
     }
 
 })
-.put(auth, (req,res,next) => {
+.put(cors.corsWithOptions,auth, (req,res,next) => {
     
     res.statusCode = 403;
     res.end('PUT operation not supported on /questions');
 })
-.delete(auth, (req,res,next) => {
+.delete(cors.corsWithOptions,auth, (req,res,next) => {
     
     res.statusCode = 403;
     res.end('DELETE operation not supported on /questions');
 });
 
 questionRouter.route('/questions/:quesId')
-.get((req,res,next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req,res,next) => {
     Questions.findById(req.params.quesId)
     .populate('author')
     .then((question) => {
@@ -64,7 +66,7 @@ questionRouter.route('/questions/:quesId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put(auth, (req, res, next) => {
+.put(cors.corsWithOptions,auth, (req, res, next) => {
     Questions.findById(req.params.quesId)
     .then((question) => {
         if (question != null) {
@@ -90,7 +92,7 @@ questionRouter.route('/questions/:quesId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete(auth, (req, res, next) => {
+.delete(cors.corsWithOptions,auth, (req, res, next) => {
 
     Questions.findById(req.params.quesId)
     .then((question) => {

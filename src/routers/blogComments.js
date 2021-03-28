@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const auth = require('../middleware/auth');
-
+const cors = require('./cors');
 const BlogComments = require('../models/blogComments');
 
 const blogCommentRouter = express.Router();
@@ -9,7 +9,8 @@ const blogCommentRouter = express.Router();
 blogCommentRouter.use(bodyParser.json());
 
 blogCommentRouter.route('/blogComments')
-.get( (req,res,next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req,res,next) => {
     BlogComments.find()
     .populate('author')
     .then((blogComments) => {
@@ -19,7 +20,7 @@ blogCommentRouter.route('/blogComments')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth,(req, res, next) => {
+.post(cors.corsWithOptions,auth,(req, res, next) => {
     if (req.body != null) {
         req.body.author = req.user._id;
         BlogComments.create(req.body)
@@ -43,7 +44,8 @@ blogCommentRouter.route('/blogComments')
 })
 
 blogCommentRouter.route('/blogComments/:commentId')
-.get( (req,res,next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req,res,next) => {
     BlogComments.findById(req.params.commentId)
     .populate('author')
     .then((comment) => {
@@ -53,11 +55,11 @@ blogCommentRouter.route('/blogComments/:commentId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth,(req, res, next) => {
+.post(cors.corsWithOptions,auth,(req, res, next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /blogComments/'+ req.params.commentId);
 })
-.put(auth ,(req, res, next) => {
+.put(cors.corsWithOptions,auth ,(req, res, next) => {
     BlogComments.findById(req.params.commentId)
     .then((comment) => {
         if (comment != null) {
@@ -88,7 +90,7 @@ blogCommentRouter.route('/blogComments/:commentId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete(auth, (req, res, next) => {
+.delete(cors.corsWithOptions,auth, (req, res, next) => {
     BlogComments.findById(req.params.commentId)
     .then((comment) => {
         if (comment != null) {

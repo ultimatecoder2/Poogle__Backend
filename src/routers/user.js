@@ -2,6 +2,7 @@ const express = require("express");
 const User = require("../models/user");
 const router = new express.Router();
 const auth = require('../middleware/auth');
+const cors = require('./cors');
 const multer = require('multer');
 const sharp = require('sharp');
 const Spaces = require("../models/spaces");

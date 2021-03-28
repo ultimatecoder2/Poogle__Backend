@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const auth = require('../middleware/auth');
-
+const cors = require('./cors');
 const QuestionReactions = require('../models/questionReactions');
 
 const questionReactionRouter = express.Router();
@@ -9,7 +9,8 @@ const questionReactionRouter = express.Router();
 questionReactionRouter.use(bodyParser.json());
 
 questionReactionRouter.route('/questionReactions')
-.get( (req,res,next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req,res,next) => {
     QuestionReactions.find()
     .populate('author')
     .then((questionReactions) => {
@@ -19,7 +20,7 @@ questionReactionRouter.route('/questionReactions')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth, (req, res, next) => {
+.post(cors.corsWithOptions,auth, (req, res, next) => {
     if (req.body != null) {
         QuestionReactions.create(req.body)
         .then((reac) => {
@@ -42,7 +43,8 @@ questionReactionRouter.route('/questionReactions')
 })
 
 questionReactionRouter.route('/questionReactions/:reacId')
-.get( (req,res,next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req,res,next) => {
     QuestionReactions.findById(req.params.reacId)
     .populate('author')
     .then((reac) => {
@@ -52,15 +54,15 @@ questionReactionRouter.route('/questionReactions/:reacId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth, (req, res, next) => {
+.post(cors.corsWithOptions,auth, (req, res, next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /questionReactions/'+ req.params.reacId);
 })
-.put(auth, (req, res, next) => {
+.put(cors.corsWithOptions,auth, (req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /questionReactions/'+ req.params.reacId);
 })
-.delete(auth, (req, res, next) => {
+.delete(cors.corsWithOptions,auth, (req, res, next) => {
     QuestionReactions.findById(req.params.reacId)
     .then((comment) => {
         if (comment != null) {

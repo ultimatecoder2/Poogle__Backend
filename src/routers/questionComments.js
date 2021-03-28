@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const auth = require('../middleware/auth');
-
+const cors = require('./cors');
 const QuestionComments = require('../models/questionComments');
 
 const questionCommentRouter = express.Router();
@@ -9,7 +9,8 @@ const questionCommentRouter = express.Router();
 questionCommentRouter.use(bodyParser.json());
 
 questionCommentRouter.route('/questionComments')
-.get( (req,res,next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors, (req,res,next) => {
     QuestionComments.find()
     .populate('author')
     .then((questionComments) => {
@@ -19,7 +20,7 @@ questionCommentRouter.route('/questionComments')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth, (req, res, next) => {
+.post(cors.corsWithOptions,auth, (req, res, next) => {
     if (req.body != null) {
         QuestionComments.create(req.body)
         .then((comment) => {
@@ -42,7 +43,8 @@ questionCommentRouter.route('/questionComments')
 })
 
 questionCommentRouter.route('/questionComments/:commentId')
-.get( (req,res,next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req,res,next) => {
     QuestionComments.findById(req.params.commentId)
     .populate('author')
     .then((comment) => {
@@ -52,11 +54,11 @@ questionCommentRouter.route('/questionComments/:commentId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth, (req, res, next) => {
+.post(cors.corsWithOptions,auth, (req, res, next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /questionComments/'+ req.params.commentId);
 })
-.put(auth, (req, res, next) => {
+.put(cors.corsWithOptions,auth, (req, res, next) => {
     QuestionComments.findById(req.params.commentId)
     .then((comment) => {
         if (comment != null) {
@@ -87,7 +89,7 @@ questionCommentRouter.route('/questionComments/:commentId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete(auth, (req, res, next) => {
+.delete(cors.corsWithOptions,auth, (req, res, next) => {
     QuestionComments.findById(req.params.commentId)
     .then((comment) => {
         if (comment != null) {

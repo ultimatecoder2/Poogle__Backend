@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const BlogDemands = require('../models/blogDemands');
 const auth = require('../middleware/auth');
+const cors = require('./cors');
 const multer = require("multer");
 
 const blogDemandRouter = express.Router();
@@ -9,7 +10,8 @@ const blogDemandRouter = express.Router();
 blogDemandRouter.use(bodyParser.json());
 
 blogDemandRouter.route('/blogDemands')
-.get((req, res, next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req, res, next) => {
 
     BlogDemands.find({})
     .populate('author')
@@ -20,7 +22,7 @@ blogDemandRouter.route('/blogDemands')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post( (req,res,next) => {
+.post(cors.corsWithOptions,auth,(req,res,next) => {
     
     if (req.body != null) {
         BlogDemands.create(req.body)
@@ -42,19 +44,20 @@ blogDemandRouter.route('/blogDemands')
     }
 
 })
-.put(auth, (req,res,next) => {
+.put(cors.corsWithOptions,auth, (req,res,next) => {
     
     res.statusCode = 403;
     res.end('PUT operation not supported on /blogDemands');
 })
-.delete(auth, (req,res,next) => {
+.delete(cors.corsWithOptions,auth, (req,res,next) => {
     
     res.statusCode = 403;
     res.end('DELETE operation not supported on /blogDemands');
 });
 
 blogDemandRouter.route('/blogDemands/:blogDemandId')
-.get((req,res,next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req,res,next) => {
     BlogDemands.findById(req.params.blogDemandId)
     .populate('author')
     .then((blogDemand) => {
@@ -64,7 +67,7 @@ blogDemandRouter.route('/blogDemands/:blogDemandId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put(auth, (req, res, next) => {
+.put(cors.corsWithOptions,auth, (req, res, next) => {
     BlogDemands.findById(req.params.blogDemandId)
     .then((blogDemand) => {
         if (blogDemand != null) {
@@ -90,7 +93,7 @@ blogDemandRouter.route('/blogDemands/:blogDemandId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete(auth, (req, res, next) => {
+.delete(cors.corsWithOptions,auth, (req, res, next) => {
 
     BlogDemands.findById(req.params.blogDemandId)
     .then((blogDemand) => {

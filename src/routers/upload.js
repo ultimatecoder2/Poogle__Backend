@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const multer = require('multer');
-
+const cors = require('./cors');
 
 // STORAGE MULTER CONFIG
 let storage = multer.diskStorage({
@@ -27,11 +27,12 @@ const uploadRouter = express.Router();
 uploadRouter.use(bodyParser.json());
 
 uploadRouter.route('/uploadfiles')
-.get((req, res, next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req, res, next) => {
     res.statusCode = 403;
     res.end('GET operation not supported on /uploadfiles');
 })
-.post((req, res) => {
+.post(cors.corsWithOptions,(req, res) => {
     /*res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json(req.file);*/
@@ -43,11 +44,11 @@ uploadRouter.route('/uploadfiles')
         return res.json({ success: true, url: res.req.file.path, fileName: res.req.file.filename });
     });
 })
-.put((req, res, next) => {
+.put(cors.corsWithOptions,(req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /uploadfiles');
 })
-.delete((req, res, next) => {
+.delete(cors.corsWithOptions,(req, res, next) => {
     res.statusCode = 403;
     res.end('DELETE operation not supported on /uploadfiles');
 });

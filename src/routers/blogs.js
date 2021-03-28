@@ -3,13 +3,14 @@ const bodyParser = require('body-parser');
 const Blogs = require('../models/blogs');
 const auth = require('../middleware/auth');
 const multer = require("multer");
-
+const cors = require('./cors');
 const blogRouter = express.Router();
 
 blogRouter.use(bodyParser.json());
 
 blogRouter.route('/blogs')
-.get((req, res, next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req, res, next) => {
 
     Blogs.find({})
     .populate('author')
@@ -20,7 +21,7 @@ blogRouter.route('/blogs')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(auth,(req,res,next) => {
+.post(cors.corsWithOptions,auth,(req,res,next) => {
     
     if (req.body != null) {
         //req.body.author = req.user._id;
@@ -43,19 +44,20 @@ blogRouter.route('/blogs')
     }
 
 })
-.put(auth, (req,res,next) => {
+.put(cors.corsWithOptions,auth, (req,res,next) => {
     
     res.statusCode = 403;
     res.end('PUT operation not supported on /blogs');
 })
-.delete(auth, (req,res,next) => {
+.delete(cors.corsWithOptions,auth, (req,res,next) => {
     
     res.statusCode = 403;
     res.end('DELETE operation not supported on /blogs');
 });
 
 blogRouter.route('/blogs/:blogId')
-.get((req,res,next) => {
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
+.get(cors.cors,(req,res,next) => {
     Blogs.findById(req.params.blogId)
     .populate('author')
     .then((blog) => {
@@ -65,7 +67,7 @@ blogRouter.route('/blogs/:blogId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put(auth, (req, res, next) => {
+.put(cors.corsWithOptions,auth, (req, res, next) => {
     Blogs.findById(req.params.blogId)
     .then((blog) => {
         if (blog != null) {
@@ -96,7 +98,7 @@ blogRouter.route('/blogs/:blogId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete( auth,(req, res, next) => {
+.delete(cors.corsWithOptions,auth,(req, res, next) => {
 
     Blogs.findById(req.params.blogId)
     .then((blog) => {
