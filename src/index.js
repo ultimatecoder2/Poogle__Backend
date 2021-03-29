@@ -28,7 +28,7 @@ const feedRouter = require("./routers/homefeed");
 const app = express();
 const port = process.env.PORT || 3001;
 const upload = multer({
-	dest: "images",
+  dest: "images",
 });
 
 app.use(logger("dev"));
@@ -65,17 +65,17 @@ app.use(feedRouter);
 
 // error handler
 app.use(function (err, req, res, next) {
-	// set locals, only providing error in development
-	res.locals.message = err.message;
-	res.locals.error = req.app.get("env") === "development" ? err : {};
-	if (err) {
-		console.log(err);
-	}
-	// render the error page
-	res.status(err.status || 500);
-	res.json({ error: err });
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get("env") === "development" ? err : {};
+  if (err) {
+    console.log(err);
+  }
+  // render the error page
+  res.status(err.status || 500);
+  res.json({ error: err });
 });
 
 app.listen(port, () => {
-	console.log("Server is up on port", port);
+  console.log("Server is up on port", port);
 });
