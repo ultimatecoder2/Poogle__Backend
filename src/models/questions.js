@@ -24,14 +24,10 @@ const questionSchema = new mongoose.Schema(
 		},
 		tagIds: [
 			{
-				// type: mongoose.Schema.Types.ObjectId,
-				// ref: "Space",
 				type: [String],
 				required: true,
 			},
 		],
-		//links: [String],
-		//imageUrls: [String],
 	},
 	{ timestamps: true }
 );

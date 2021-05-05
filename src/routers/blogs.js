@@ -12,7 +12,7 @@ blogRouter.route('/blogs')
 .options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
 .get(cors.cors,(req, res, next) => {
 
-    Blogs.find({})
+    Blogs.find({"tagIds" : { $in: req.query.interests.split(',')}})
     .populate('author')
     .then((blog) => {
         res.statusCode = 200;
@@ -24,7 +24,6 @@ blogRouter.route('/blogs')
 .post(cors.corsWithOptions,auth,(req,res,next) => {
     
     if (req.body != null) {
-        //req.body.author = req.user._id;
         Blogs.create(req.body)
         .then((blog) => {
             Blogs.findById(blog._id)

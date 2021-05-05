@@ -12,7 +12,6 @@ feedRouter.use(bodyParser.json());
 feedRouter.route('/homeFeed')
 .options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
 .get(cors.cors,(req, res, next) => {
-        //JSON.parse(req.query.interests)
 
     Questions.find({"tagIds" : { $in: req.query.interests.split(',')}})
     .populate('author')

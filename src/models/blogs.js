@@ -27,8 +27,6 @@ const blogSchema = mongoose.Schema({
     },
     tagIds: [
         {
-            // type: mongoose.Schema.Types.ObjectId,
-            // ref: "Space",
             type: [String],
             required: true,
         },
