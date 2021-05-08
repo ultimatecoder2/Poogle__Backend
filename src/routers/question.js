@@ -115,4 +115,28 @@ questionRouter.route('/questions/:quesId')
     .catch((err) => next(err));
 });
 
+
+//Paginated api to get questions. Contains a query parameter "userId". 
+// If we pass userId, then it will fetch questions posted by that user,
+// otherwise questions will be selected from all questions.
+
+questionRouter.get("/userquestions", auth, async (req, res) => {
+    console.log("Hi", req.query);
+	try {
+        const {userId, Limit, Skip} = req.query;
+        let limit = Limit?parseInt(Limit):12;
+        let skip = Skip?parseInt(Skip):0;
+        let questions;
+        if(userId){
+		    questions = await Questions.find({"author":userId}).populate('author').sort({"updatedAt":-1}).skip(skip).limit(limit);
+        }else{
+            questions = await Questions.find({}).populate('author').sort({"updatedAt":-1}).skip(skip).limit(limit);
+		}
+        res.status(200).send(questions)
+	} catch (e) {
+		console.log(e);
+		res.status(500).send();
+	}
+});
+
 module.exports = questionRouter;
