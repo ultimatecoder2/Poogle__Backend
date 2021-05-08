@@ -121,7 +121,6 @@ questionRouter.route('/questions/:quesId')
 // otherwise questions will be selected from all questions.
 
 questionRouter.get("/userquestions", auth, async (req, res) => {
-    console.log("Hi", req.query);
 	try {
         const {userId, Limit, Skip} = req.query;
         let limit = Limit?parseInt(Limit):12;

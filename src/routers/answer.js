@@ -123,4 +123,25 @@ answerRouter.route('/answers/:ansId')
     .catch((err) => next(err));
 });
 
+//Paginated api to get answers. Contains a query parameter "userId". 
+// If we pass userId, then it will fetch answers posted by that user,
+// otherwise answers will be selected from all answers.
+answerRouter.get("/useranswers", auth, async (req, res) => {
+	try {
+        const {userId, Limit, Skip} = req.query;
+        let limit = Limit?parseInt(Limit):12;
+        let skip = Skip?parseInt(Skip):0;
+        let answers;
+        if(userId){
+		    answers = await Answers.find({"author":userId}).populate('author').sort({"updatedAt":-1}).skip(skip).limit(limit);
+        }else{
+            answers = await Answers.find({}).populate('author').sort({"updatedAt":-1}).skip(skip).limit(limit);
+		}
+        res.status(200).send(answers);
+	} catch (e) {
+		console.log(e);
+		res.status(500).send();
+	}
+});
+
 module.exports = answerRouter;
