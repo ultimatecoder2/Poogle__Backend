@@ -119,5 +119,33 @@ blogRouter.route('/blogs/:blogId')
     .catch((err) => next(err));
 });
 
+//Paginated api to get blogs. Contains a query parameter "userId". 
+// If we pass userId, then it will fetch blogs posted by that user,
+// otherwise blogs will be selected from all blogs.
+blogRouter.get("/userblogs", auth, async (req, res) => {
+    
+	try {
+        const {userId, Limit, Skip} = req.query;
+        let limit = Limit?parseInt(Limit):12;
+        let skip = Skip?parseInt(Skip):0;
+        let blogs;
+        if(userId){
+		    blogs = await Blogs.find({"author":userId}).populate('author').sort({"updatedAt":-1}).skip(skip).limit(limit);
+        }else{
+            blogs = await Blogs.find({}).populate('author').sort({"updatedAt":-1}).skip(skip).limit(limit);
+		}
+        let myblogs = blogs;
+        for(var i=0;i<myblogs.length;i+=1){
+            let author = myblogs[i].author;
+            author = {"_id":author._id, "name":author.name,"user_name":author.user_name}
+            myblogs[i].author = author;
+        }
+        res.status(200).send(myblogs);
+	} catch (e) {
+		console.log(e);
+		res.status(500).send();
+	}
+});
+
 module.exports = blogRouter;
 
