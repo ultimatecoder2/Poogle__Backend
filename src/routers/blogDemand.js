@@ -116,5 +116,36 @@ blogDemandRouter.route('/blogDemands/:blogDemandId')
     .catch((err) => next(err));
 });
 
+//Paginated api to get blogDemands. Contains a query parameter "userId". 
+// If we pass userId, then it will fetch blogDemands posted by that user,
+// otherwise blogDemands will be selected from all blogDemands.
+blogDemandRouter.get("/userblogDemands", auth, async (req, res) => {
+    
+	try {
+        const {userId, Limit, Skip} = req.query;
+        let limit = Limit?parseInt(Limit):12;
+        let skip = Skip?parseInt(Skip):0;
+        let blogDemands;
+        if(userId){
+		    blogDemands = await BlogDemands.find({"author":userId}).populate('author').sort({"updatedAt":-1}).skip(skip).limit(limit);
+        }else{
+            blogDemands = await BlogDemands.find({}).populate('author').sort({"updatedAt":-1}).skip(skip).limit(limit);
+		}
+        let userBlogDemands = blogDemands;
+        for(var i=0;i<userBlogDemands.length;i+=1){
+            let author = userBlogDemands[i].author;
+            
+            author = {"_id":author._id, "name":author.name,"user_name":author.user_name}
+            userBlogDemands[i].author = author;
+        }
+
+        res.status(200).send(userBlogDemands)
+	} catch (e) {
+		console.log(e);
+		res.status(500).send();
+	}
+});
+
+
 module.exports = blogDemandRouter;
 
