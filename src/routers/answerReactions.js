@@ -21,8 +21,7 @@ answerReactionRouter.route('/answerReactions')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(cors.corsWithOptions,auth, (req, res, next) => {
-
+.post(cors.corsWithOptions,auth, async (req, res, next) => {
 
     if (req.body != null) {
         AnswerReactions.create(req.body)
