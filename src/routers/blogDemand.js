@@ -13,7 +13,7 @@ blogDemandRouter.route('/blogDemands')
 .options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200);})
 .get(cors.cors,(req, res, next) => {
 
-    BlogDemands.find({})
+    BlogDemands.find({"tagIds" : { $in: req.query.interests.split(',')}})
     .populate('author')
     .then((blogDemand) => {
         res.statusCode = 200;
