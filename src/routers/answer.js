@@ -131,11 +131,13 @@ answerRouter.get("/useranswers", auth, async (req, res) => {
         const {userId, Limit, Skip} = req.query;
         let limit = Limit?parseInt(Limit):12;
         let skip = Skip?parseInt(Skip):0;
-        let answers;
+        let answers, count=0;
         if(userId){
 		    answers = await Answers.find({"author":userId}).populate('author').populate('question').sort({"updatedAt":-1}).skip(skip).limit(limit);
+            count = await Answers.find({"author":userId}).countDocuments()
         }else{
             answers = await Answers.find({}).populate('author').populate('question').sort({"updatedAt":-1}).skip(skip).limit(limit);
+            count = await Answers.find({}).countDocuments()
 		}
         let myans = answers;
         for(var i=0;i<myans.length;i+=1){
@@ -147,7 +149,7 @@ answerRouter.get("/useranswers", auth, async (req, res) => {
             myans[i].question = ques;
             myans[i].author = author;
         }
-        res.status(200).send(myans);
+        res.status(200).send({answers:myans, count});
 	} catch (e) {
 		console.log(e);
 		res.status(500).send();

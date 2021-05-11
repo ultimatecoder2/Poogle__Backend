@@ -125,11 +125,13 @@ blogDemandRouter.get("/userblogDemands", auth, async (req, res) => {
         const {userId, Limit, Skip} = req.query;
         let limit = Limit?parseInt(Limit):12;
         let skip = Skip?parseInt(Skip):0;
-        let blogDemands;
+        let blogDemands, count=0;
         if(userId){
 		    blogDemands = await BlogDemands.find({"author":userId}).populate('author').sort({"updatedAt":-1}).skip(skip).limit(limit);
+            count = await BlogDemands.find({"author":userId}).countDocuments()
         }else{
             blogDemands = await BlogDemands.find({}).populate('author').sort({"updatedAt":-1}).skip(skip).limit(limit);
+            count = await BlogDemands.find({}).countDocuments()
 		}
         let userBlogDemands = blogDemands;
         for(var i=0;i<userBlogDemands.length;i+=1){
@@ -139,7 +141,7 @@ blogDemandRouter.get("/userblogDemands", auth, async (req, res) => {
             userBlogDemands[i].author = author;
         }
 
-        res.status(200).send(userBlogDemands)
+        res.status(200).send({blogDemands:userBlogDemands, count})
 	} catch (e) {
 		console.log(e);
 		res.status(500).send();

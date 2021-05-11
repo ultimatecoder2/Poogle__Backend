@@ -125,13 +125,15 @@ questionRouter.get("/userquestions", auth, async (req, res) => {
         const {userId, Limit, Skip} = req.query;
         let limit = Limit?parseInt(Limit):12;
         let skip = Skip?parseInt(Skip):0;
-        let questions;
+        let questions, count=0;
         if(userId){
 		    questions = await Questions.find({"author":userId}).populate('author').sort({"updatedAt":-1}).skip(skip).limit(limit);
+            count = await Questions.find({"author":userId}).countDocuments()
         }else{
             questions = await Questions.find({}).populate('author').sort({"updatedAt":-1}).skip(skip).limit(limit);
+            count = await Questions.find({}).countDocuments()
 		}
-        res.status(200).send(questions)
+        res.status(200).send({questions, count})
 	} catch (e) {
 		console.log(e);
 		res.status(500).send();
