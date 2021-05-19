@@ -32,21 +32,17 @@ Run following command to open server in nodemon.
 npm run dev
 ```
 
-Now run following commands:
-
-1. npm i
-2. npm start
-3. after npm start in cmd type mongo
-   to open mongo REPL shell
-   and use command >>
-
-show dbs
-
-this will show u a db as poogle-api this will be database for our project ..
-
-# Link for frontend repo:
-Frontend: <br />
-https://github.com/bhaveshkumarpassi/Poogle <br />
+Now run following commands in the terminal in the root directory of this project:
+<ol>
+   <li><code> npm install</code></li>
+   <li><code> npm start</code>. To start the server using nodemon, you can use <code> npm run dev</code> instead</li>
+   <li>Open a new terminal and run <code>mongo</code> <br/>  
+   This will open mongo REPL shell. You can use command <code>show dbs</code> <br/>
+   This will show you a database as "poogle-api". This will be database for our project ..
+</li>
+   
+# Link for Frontend repo:
+Frontend: https://github.com/bhaveshkumarpassi/Poogle <br />
 
 
 
